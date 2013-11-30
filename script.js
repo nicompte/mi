@@ -15,7 +15,7 @@ server.use(express.limit('8mb'));
 
 // Client side
 angular.module('LocalStorageModule').value('prefix', 'mi');
-var app = angular.module('mi', ['ngRoute', 'LocalStorageModule', 'ui-routeur']);
+var app = angular.module('mi', ['ngRoute', 'LocalStorageModule']);
 
 app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
   'use strict';

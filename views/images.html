@@ -1,6 +1,0 @@
-
-<div ng-controller="ShowImagesCtrl" class="row row-fluid image-list">
-  <div ng-repeat="image in images" style="margin-bottom: 10px;" class="col-sm-3"><img src="{{targetFolder}}/{{image}}" class="img-responsive"/>
-    <div ng-cloak="ng-cloak" class="img-actions"><a href="javascript:void(0)" ng-click="open(targetFolder+'/'+image)" title="Zoomer"><i class="fa fa-search-plus"></i></a><a href="javascript:void(0)" ng-click="delete(targetFolder+'/'+image)" title="Supprimer"><i class="fa fa-minus-circle"></i></a></div>
-  </div>
-</div>
