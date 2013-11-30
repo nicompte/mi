@@ -21,8 +21,8 @@ app.directive('fileButton',function ($compile,$filter) {
 
   return {
     link:function(scope,element,attrs) {
-      element.bind("click",function() {
-        element.parent().find("input")[1].click();
+      element.bind('click', function() {
+        element.parent().find('input')[1].click();
       });
     }
   };
@@ -48,7 +48,9 @@ app.directive('bsNavbar', function($location) {
           if(regexp.test(newValue)) {
             $li.addClass('active');
             var $collapse = $li.find('.collapse.in');
-            if($collapse.length) $collapse.collapse('hide');
+            if($collapse.length){
+              $collapse.collapse('hide');
+            }
           } else {
             $li.removeClass('active');
           }

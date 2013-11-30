@@ -20,6 +20,7 @@
     "grunt-contrib-jade": "~0.8.0",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-less": "~0.8.1",
-    "grunt-newer": "~0.6.0"
+    "grunt-newer": "~0.6.0",
+    "grunt-contrib-jshint": "~0.7.2"
   }
 }

@@ -7,7 +7,10 @@ var http = require('http'),
   settings = {};
 
 function onPart(part) {
-  if(!part.filename || part.filename.match(/\.(jpg|jpeg|png)$/i)) { this.handlePart(part); }
+  'use strict';
+  if(!part.filename || part.filename.match(/\.(jpg|jpeg|png)$/i)) {
+    this.handlePart(part);
+  }
 }
 
 server.use(express.bodyParser({onPart: onPart}));
@@ -34,7 +37,7 @@ app.controller('MainCtrl', function ($scope, localStorageService, $location, $ro
   $scope.$on('$viewContentLoaded', function () {
     //console.log('View Changed');
   });
-  
+
   //Define routes
   server.post('/file-upload', function(req, res) {
 
@@ -45,17 +48,23 @@ app.controller('MainCtrl', function ($scope, localStorageService, $location, $ro
       return user.name === req.body['user.name'] && user.password === MD5(req.body['user.password']);
     });
 
-    if(authorizedUser.length != 1){
+    if(authorizedUser.length !== 1){
       res.send(401);
     }
 
-    var tmp_path = req.files.file.path;
-    var target_path = settings.targetFolder + '/' + req.files.file.name;
-    fs.rename(tmp_path, target_path, function(err) {
-      if (err) throw err;
-      fs.unlink(tmp_path, function() {
-        if (err) throw err;
-        if($location.path() === '/images') $route.reload();
+    var tmpPath = req.files.file.path;
+    var targetPath = settings.targetFolder + '/' + req.files.file.name;
+    fs.rename(tmpPath, targetPath, function(err) {
+      if (err){
+        throw err;
+      }
+      fs.unlink(tmpPath, function() {
+        if (err){
+          throw err;
+        }
+        if($location.path() === '/images'){
+          $route.reload();
+        }
         res.send(200);
       });
     });
@@ -74,17 +83,20 @@ app.controller('ServerStateCtrl', function ($scope, localStorageService) {
     serverOn = localStorageService.get('serverOn') || false;
   settings = localStorageService.get('settings');
 
-  nodeServer.on('listening', function () { 
-    $scope.serverOn = true; $scope.$apply();
+  nodeServer.on('listening', function () {
+    $scope.serverOn = true;
+    $scope.$apply();
     localStorageService.set('serverOn', true);
   });
   nodeServer.on('close', function () {
-    $scope.serverOn = false; $scope.$apply();
+    $scope.serverOn = false;
+    $scope.$apply();
     localStorageService.set('serverOn', false);
   });
-  nodeServer.on('error', function () { 
-    alert('Impossible de démarrer le serveur. Vérifiez le port utilisé.'); 
-    $scope.serverOn = false; $scope.$apply(); 
+  nodeServer.on('error', function () {
+    alert('Impossible de démarrer le serveur. Vérifiez le port utilisé.');
+    $scope.serverOn = false;
+    $scope.$apply();
   });
 
   var startServer = function () {
@@ -105,16 +117,16 @@ app.controller('ServerStateCtrl', function ($scope, localStorageService) {
     }else{
       startServer();
     }
-  }
-  
+  };
+
 });
 
 app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
-  'use strict'; 
-  
+  'use strict';
+
   var request = require('request');
   $scope.settings = settings = localStorageService.get('settings');
-  
+
   if(typeof settings === 'undefined' || settings === null){
     settings = {};
     settings.port = 3000;
@@ -122,7 +134,7 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
   }
 
   request('http://ipinfo.io', function (error, response, body) {
-    if (!error && response.statusCode == 200){
+    if (!error && response.statusCode === 200){
       $scope.settings.ip = JSON.parse(body).ip;
       $scope.$apply();
     }
@@ -133,28 +145,24 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
     localStorageService.remove('settings');
     localStorageService.add('settings', $scope.settings);
     settings = $scope.settings;
-  }
-  $scope.openFolderSelector = function () {
-    $('#folderSelector').click();
-  }
+  };
+
   $scope.testServerConfiguration = function () {
     var url = 'http://' + $scope.settings.ip + ':' + $scope.settings.port + '/ping';
     request({url: url, timeout: 2000}, function (error, response, body) {
-      if(!error && response.statusCode == 200){
+      if(!error && response.statusCode === 200){
         $scope.settings.serverConfiguration = true;
       }else{
         $scope.settings.serverConfiguration = false;
       }
-      $scope.configurationMessage = $scope.settings.serverConfiguration == true ? 'Configuration valide.<br/>Adresse à transmettre : ' + $scope.settings.ip + ':' + $scope.settings.port
-        : $scope.settings.serverConfiguration == false ? 'Echec de la configuration.<br/>Vérifiez que le port est bien ouvert par votre firewall et/ou votre routeur.' 
+      $scope.configurationMessage = $scope.settings.serverConfiguration === true ? 'Configuration valide.<br/>Adresse à transmettre : ' + $scope.settings.ip + ':' + $scope.settings.port
+        : $scope.settings.serverConfiguration === false ? 'Echec de la configuration.<br/>Vérifiez que le port est bien ouvert par votre firewall et/ou votre routeur.'
         : '';
       $scope.configurationMessage = $sce.trustAsHtml($scope.configurationMessage);
       $scope.$apply();
     });
-  }
-  $scope.getConfigurationMessage = function () {
-    
-  }
+  };
+
 });
 
 app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
@@ -168,7 +176,7 @@ app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
   $scope.delete = function (imageToDelete) {
     fs.unlink(imageToDelete, function () {
       $scope.images = $scope.images.filter(function (image) {
-        return $scope.targetFolder + '/' + image != imageToDelete;
+        return $scope.targetFolder + '/' + image !== imageToDelete;
       });
       $scope.$apply();
     });
@@ -176,18 +184,19 @@ app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
   $scope.open = function (imageToOpen) {
     var gui = require('nw.gui'),
       sizeOf = require('image-size'),
-      dimensions = sizeOf(imageToOpen);
+      dimensions = sizeOf(imageToOpen),
+      ratio;
     if(dimensions.width > 1024){
-      var ratio = dimensions.width / dimensions.height;
+      ratio = dimensions.width / dimensions.height;
       dimensions.width = 1024;
-      dimensions.height = 1024 / ratio;      
+      dimensions.height = 1024 / ratio;
     }
     if(dimensions.height > 768){
-      var ratio = dimensions.height / dimensions.width;
+      ratio = dimensions.height / dimensions.width;
       dimensions.height = 768;
       dimensions.width = 768 / ratio;
     }
-    gui.Window.open("file://" + imageToOpen, {
+    gui.Window.open('file://' + imageToOpen, {
       position: 'center',
       width: dimensions.width,
       height: dimensions.height

@@ -4,7 +4,8 @@ var win = gui.Window.get();
 var tray;
 
 win.on('minimize', function() {
-  
+  'use strict';
+
 });
 
 var menu = new gui.Menu();
@@ -13,6 +14,7 @@ var tray;
 menu.append(new gui.MenuItem({
   label: 'Ouvrir',
   click: function () {
+    'use strict';
     win.show();
     tray.remove();
   }
@@ -21,6 +23,7 @@ menu.append(new gui.MenuItem({
 menu.append(new gui.MenuItem({
   label: 'Quitter',
   click: function () {
+    'use strict';
     win.close(true);
   }
 }));

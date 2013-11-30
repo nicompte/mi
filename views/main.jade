@@ -17,7 +17,7 @@ head
         ng-click="toggleServerState()", 
         ng-class="serverOn === true ? 'active btn-success' : serverOn === false ? 'btn-danger' : 'disabled'"
       ) 
-          {{ serverOn === true ? 'Serveur On' : serverOn === false ? 'Serveur off' : 'Chargement'}}
+        {{ serverOn === true ? 'Serveur On' : serverOn === false ? 'Serveur off' : 'Chargement'}}
     ul.list-inline.app-menu.nav.nav-pills(bs-navbar)
       li(data-match-route='/images', title="Images")
         a(href='#/images') 
