@@ -4,7 +4,7 @@ head
     meta(charset='UTF-8')
     link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css")
     link(href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel="stylesheet")
-    link(rel='stylesheet', href='../style.css')
+    link(rel='stylesheet', href='../css/style.css')
     title Mi v0.1.0
   body
     h1.header 
@@ -41,8 +41,9 @@ head
           | Aide
     div(ng-controller='MainCtrl')
       .content(data-ng-view='')
-    script(src='../vendor/angular-1.2.1.js')
-    script(src='../vendor/angular-route-1.2.1.js')
-    script(src='../vendor/angular-local-storage.js')
-    script(src='../script.js')
-    script(src='../nw-script.js')
+    script(src='../scripts/vendor/angular-1.2.1.js')
+    script(src='../scripts/vendor/angular-route-1.2.1.js')
+    script(src='../scripts/vendor/angular-local-storage.js')
+    script(src='../scripts/main.js')
+    script(src='../scripts/directives.js')
+    script(src='../scripts/nw-script.js')

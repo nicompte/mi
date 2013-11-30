@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     less: {
       compile: {
         files: {
-          'style.css': 'style.less'
+          'css/style.css': 'css/style.less'
         }
       }
     },
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         tasks: ['newer:jade'],
       },
       less: {
-        files: ['*.less'],
+        files: ['css/*.less'],
         tasks: ['newer:less']
       },
       options: {
