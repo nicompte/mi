@@ -56,8 +56,11 @@ module.exports = function (grunt) {
           'views/index.html': 'views/index.jade',
           'views/images.html': 'views/images.jade',
           'views/users.html': 'views/users.jade',
+          'views/users.receive.html': 'views/users.receive.jade',
+          'views/users.send.html': 'views/users.send.jade',
           'views/newUser.html': 'views/newUser.jade',
-          'views/help.html': 'views/help.jade'
+          'views/help.html': 'views/help.jade',
+          'views/upload.html': 'views/upload.jade'
         }
       }
     },
