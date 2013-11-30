@@ -18,8 +18,9 @@ server.use(express.limit('8mb'));
 
 // Client side
 angular.module('LocalStorageModule').value('prefix', 'mi');
-var app = angular.module('mi', ['ngRoute', 'LocalStorageModule']);
+var app = angular.module('mi', ['ngRoute', 'LocalStorageModule', 'ui.router']);
 
+/*
 app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
   'use strict';
   $locationProvider.html5Mode(false);
@@ -31,6 +32,25 @@ app.config(['$locationProvider', '$routeProvider', function ($locationProvider, 
   .when('/help',  {templateUrl: 'help.html'})
   .otherwise({redirectTo: '/images'});
 }]);
+*/
+
+app.config(function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/images');
+  $stateProvider
+    .state('images', { url: '/images', templateUrl: 'images.html' })
+    .state('upload', { url: '/upload', templateUrl: 'upload.html' })
+    .state('settings', { url: '/settings', templateUrl: 'index.html' })
+    .state('users', { url: '/users', templateUrl: 'users.html'})
+    .state('users.receive', { url: '/receive', templateUrl: 'users.receive.html' })
+    .state('users.send', { url: '/send', templateUrl: 'users.send.html' })
+    .state('help', { url: '/help', templateUrl: 'help.html' });
+});
+
+/*
+, controller: function ($state) {
+      $state.transitionTo('users.receive');
+    }
+    */
 
 app.controller('MainCtrl', function ($scope, localStorageService, $location, $route) {
   'use strict';
@@ -165,6 +185,29 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
 
 });
 
+app.controller('SendCtrl', function ($scope) {
+
+  var request = require('request');
+
+  $scope.send = {}
+  $scope.send.address = "81.65.198.85:3000"
+  $scope.send.image = "/Users/nico/Pictures/V__2199.jpg"
+  $scope.send.user = {}
+  $scope.send.user.name = "Bob"
+  $scope.send.user.password = "123"
+
+  $scope.send = function () {
+
+    var r = request.post('http://' + $scope.send.address + '/file-upload');
+    var form = r.form();
+    form.append('name', $scope.send.user.name);
+    form.append('password', $scope.send.user.password);
+    form.append('file', fs.createReadStream($scope.send.image));
+
+  };
+
+});
+
 app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
   'use strict';
 
@@ -237,5 +280,4 @@ app.controller('NewUserCtrl', function ($scope, localStorageService, $location) 
     });
   };
 });
-
 

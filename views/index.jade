@@ -1,17 +1,17 @@
 #targetFolder(ng-controller='SettingsCtrl')
-  
+
   form.css-form(name="settingsForm")
     .form-group
       label.h4 Répertoire cible
       .form-inline
-        input.form-control(type='text', ng-model='settings.targetFolder', required)
-        input#folderSelector.form-control(type='file', nwdirectory='nwdirectory', nwworkingdir='', data-file='settings.targetFolder', ng-hide='true')
-        button.btn.btn-default(file-button) 
+        input.form-control(type='text', ng-model='settings.targetFolder', required, placeholder="Répertoire cible")
+        input.form-control(type='file', nwdirectory='nwdirectory', nwworkingdir='', data-file='settings.targetFolder', ng-hide='true')
+        button.btn.btn-default(file-button)
           i.fa.fa-folder-open-o
           | Parcourir
     .form-group
       h4 Serveur
-      div.row
+      .row
         .col-xs-6
           label.h5 Votre adresse ip
           input.form-control(type='text', ng-disabled="true", ng-model='settings.ip')
@@ -29,6 +29,6 @@
             ng-cloak
           )
 
-    button.btn.btn-default(ng-click='save()', ng-disabled='isClean() || settingsForm.$invalid') 
+    button.btn.btn-default(ng-click='save()', ng-disabled='isClean() || settingsForm.$invalid')
       i.fa.fa-save
       | Sauvegarder

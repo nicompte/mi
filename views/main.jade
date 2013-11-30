@@ -7,43 +7,49 @@ head
     link(rel='stylesheet', href='../css/style.css')
     title Mi v0.1.0
   body
-    h1.header 
+    h1.header
       i.fa.fa-camera-retro.text-primary
       | Mi
       small v0.1.0
     div(ng-controller="ServerStateCtrl")
       button.btn.btn-xs.state-button(
         ng-cloak
-        ng-click="toggleServerState()", 
+        ng-click="toggleServerState()",
         ng-class="serverOn === true ? 'active btn-success' : serverOn === false ? 'btn-danger' : 'disabled'"
-      ) 
+      )
         {{ serverOn === true ? 'Serveur On' : serverOn === false ? 'Serveur off' : 'Chargement'}}
     ul.list-inline.app-menu.nav.nav-pills(bs-navbar)
       li(data-match-route='/images', title="Images")
-        a(href='#/images') 
+        a(ui-sref='images')
           i.fa.fa-picture-o
           | Images
-      li(data-match-route='/send', title="Envoi")
-        a(href="/#envoi")
+      li(data-match-route='/upload', title="Envoi")
+        a(ui-sref="upload")
           i.fa.fa-upload
           | Envoi
       li(data-match-route='/settings')
-        a(href='#/settings', title="Configuration")
+        a(ui-sref='settings', title="Configuration")
           i.fa.fa-cog
           | Configuration
       li(data-match-route='/users', title="Utilisateurs")
-        a(href='#/users')
+        a(ui-sref='users')
           i.fa.fa-users
           | Utilisateurs
       li(data-match-route='/help', title="Aide")
-        a(href='#/help')
+        a(ui-sref='help')
           i.fa.fa-question
           | Aide
+    //
+      a(ui-sref='images') Images
+      a(ui-sref='upload') Envoi
+      a(ui-sref='settings') Configuration
     div(ng-controller='MainCtrl')
-      .content(data-ng-view='')
+      // .content(data-ng-view='')
+      .content(ui-view)
     script(src='../scripts/vendor/angular-1.2.1.js')
     script(src='../scripts/vendor/angular-route-1.2.1.js')
     script(src='../scripts/vendor/angular-local-storage.js')
+    script(src='../scripts/vendor/angular-ui-router.js')
     script(src='../scripts/main.js')
     script(src='../scripts/directives.js')
-    script(src='../scripts/nw-script.js')
+    script(src='../scripts/nw-scripts.js')

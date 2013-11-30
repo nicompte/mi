@@ -1,0 +1,28 @@
+h4 Envoi d'image
+
+div(ng-controller='SendCtrl')
+  form(name='sendForm')
+    .form-group
+      label.h5 Adresse
+      input.form-control(type="text", ng-model="send.address", required, placeholder='Adresse', ng-focus)
+      span(ng-show="sendForm.send.address.$error.required")
+
+    label.h5 Image
+    .form-group
+      .form-inline
+        input.form-control(type='text', ng-model='send.image', required, placeholder="Image")
+        input.form-control(type='file', data-file='send.image', ng-hide='true')
+        button.btn.btn-default(file-button)
+          i.fa.fa-folder-open-o
+          | Parcourir
+
+    label.h5 Authentification
+    .form-group
+      .form-inline
+        input.form-control(type="text", ng-model="send.user.name", required, placeholder='Votre nom', style="width: 198px;")
+        span(ng-show="sendForm.send.user.name.$error.required")
+
+        input.form-control(type="password", ng-model="send.user.password", required, placeholder='Votre mot de passe', style="width: 198px;")
+        span(ng-show="sendForm.send.user.password.$error.required")
+
+    button.btn.btn-default(ng-click='send()', ng-disabled='isClean() || sendForm.$invalid') Envoyer

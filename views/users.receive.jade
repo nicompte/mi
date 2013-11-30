@@ -1,15 +1,3 @@
-.row
-  ul.nav.nav-pills.nav-xs.col-xs-6.col-xs-offset-4.user-type-selection-nav
-    li.active
-      a(ui-sref="users.receive")
-        i.fa.fa-mail-forward
-        | Qui vous envoient
-    li
-      a(ui-sref="users.send")
-        i.fa.fa-mail-reply
-        | À qui vous envoyez
-div(ui-view)
-
 div(ng-controller='ShowUsersCtrl')
   table.table
     thead
