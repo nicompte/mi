@@ -189,13 +189,6 @@ app.controller('SendCtrl', function ($scope) {
 
   var request = require('request');
 
-  $scope.send = {}
-  $scope.send.address = "81.65.198.85:3000"
-  $scope.send.image = "/Users/nico/Pictures/V__2199.jpg"
-  $scope.send.user = {}
-  $scope.send.user.name = "Bob"
-  $scope.send.user.password = "123"
-
   $scope.send = function () {
 
     var r = request.post('http://' + $scope.send.address + '/file-upload');
