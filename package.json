@@ -1,0 +1,25 @@
+{
+  "name": "mi",
+  "main": "views/main.html",
+  "version": "0.1.0",
+  "window": {
+    "toolbar": true,
+    "frame": true,
+    "show_in_taskbar": false,
+    "width": 900
+  },
+  "dependencies": {
+    "express": "~3.4.4",
+    "MD5": "~1.2.0",
+    "request": "~2.27.0",
+    "image-size": "0.0.16"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-node-webkit-builder": "~0.1.11",
+    "grunt-contrib-jade": "~0.8.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-less": "~0.8.1",
+    "grunt-newer": "~0.6.0"
+  }
+}

@@ -1,0 +1,14 @@
+div(ng-controller='NewUserCtrl')
+  h4 Nouvel utilisateur
+  form.form-inline(name='newUser')
+    div.form-group(style='width: 200px;')
+      label.sr-only Nom
+      input.form-control(type="text", ng-model="user.name", required, placeholder='Nom', ng-focus)
+      span(ng-show="newUser.name.$error.required")
+
+    div.form-group(style='width: 200px;')
+      label.sr-only Mot de passe
+      input.form-control(type="password", ng-model="user.password", required, placeholder='Mot de passe')
+      span(ng-show="newUser.password.$error.required")
+
+    button.btn.btn-default(ng-click='save()', ng-disabled='isClean() || newUser.$invalid') Sauver

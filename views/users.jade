@@ -1,0 +1,27 @@
+div(ng-controller='ShowUsersCtrl')
+  .row
+    ul.nav.nav-pills.nav-xs.col-xs-6.col-xs-offset-4.user-type-selection-nav
+      li.active
+        a(href="/#users")
+          i.fa.fa-mail-forward
+          | Qui vous envoient
+      li
+        a(href="/#users2")
+          i.fa.fa-mail-reply
+          | À qui vous envoyez
+  table.table
+    thead
+      tr
+        th Utilisateur
+        th Nombre d'images
+        th 
+          a(href='#/newUser', title="Ajouter")
+            i.fa.fa-plus-circle.text-success
+            | Ajouter
+      tbody
+        tr(ng-repeat='user in users')
+          td {{user.name}}
+          td {{user.numberOfImages}}
+          td
+            a(href='javascript:void(0)', ng-click='delete(user.name)', title="Supprimer")
+              i.fa.fa-minus-circle.text-danger

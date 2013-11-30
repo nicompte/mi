@@ -1,0 +1,25 @@
+
+<div ng-controller="ShowUsersCtrl">
+  <div class="row">
+    <ul class="nav nav-pills nav-xs col-xs-6 col-xs-offset-4 user-type-selection-nav">
+      <li class="active"><a href="/#users"><i class="fa fa-mail-forward"></i>Qui vous envoient</a></li>
+      <li><a href="/#users2"><i class="fa fa-mail-reply"></i>À qui vous envoyez</a></li>
+    </ul>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Nombre d'images</th>
+        <th> <a href="#/newUser" title="Ajouter"><i class="fa fa-plus-circle text-success"></i>Ajouter</a></th>
+      </tr>
+      <tbody>
+        <tr ng-repeat="user in users">
+          <td>{{user.name}}</td>
+          <td>{{user.numberOfImages}}</td>
+          <td><a href="javascript:void(0)" ng-click="delete(user.name)" title="Supprimer"><i class="fa fa-minus-circle text-danger"></i></a></td>
+        </tr>
+      </tbody>
+    </thead>
+  </table>
+</div>

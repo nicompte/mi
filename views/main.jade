@@ -1,0 +1,48 @@
+!!! 5
+html(data-ng-app='mi')
+head
+    meta(charset='UTF-8')
+    link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css")
+    link(href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel="stylesheet")
+    link(rel='stylesheet', href='../style.css')
+    title Mi v0.1.0
+  body
+    h1.header 
+      i.fa.fa-camera-retro.text-primary
+      | Mi
+      small v0.1.0
+    div(ng-controller="ServerStateCtrl")
+      button.btn.btn-xs.state-button(
+        ng-cloak
+        ng-click="toggleServerState()", 
+        ng-class="serverOn === true ? 'active btn-success' : serverOn === false ? 'btn-danger' : 'disabled'"
+      ) 
+          {{ serverOn === true ? 'Serveur On' : serverOn === false ? 'Serveur off' : 'Chargement'}}
+    ul.list-inline.app-menu.nav.nav-pills(bs-navbar)
+      li(data-match-route='/images', title="Images")
+        a(href='#/images') 
+          i.fa.fa-picture-o
+          | Images
+      li(data-match-route='/send', title="Envoi")
+        a(href="/#envoi")
+          i.fa.fa-upload
+          | Envoi
+      li(data-match-route='/settings')
+        a(href='#/settings', title="Configuration")
+          i.fa.fa-cog
+          | Configuration
+      li(data-match-route='/users', title="Utilisateurs")
+        a(href='#/users')
+          i.fa.fa-users
+          | Utilisateurs
+      li(data-match-route='/help', title="Aide")
+        a(href='#/help')
+          i.fa.fa-question
+          | Aide
+    div(ng-controller='MainCtrl')
+      .content(data-ng-view='')
+    script(src='../vendor/angular-1.2.1.js')
+    script(src='../vendor/angular-route-1.2.1.js')
+    script(src='../vendor/angular-local-storage.js')
+    script(src='../script.js')
+    script(src='../nw-script.js')

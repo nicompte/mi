@@ -1,0 +1,9 @@
+div.row.row-fluid.image-list(ng-controller='ShowImagesCtrl')
+  div.col-sm-3(ng-repeat='image in images', style='margin-bottom: 10px;')
+    img.img-responsive(src='{{targetFolder}}/{{image}}')
+    .img-actions(ng-cloak)
+      a(href="javascript:void(0)", ng-click="open(targetFolder+'/'+image)", title="Zoomer")
+        i.fa.fa-search-plus
+      a(href="javascript:void(0)", ng-click="delete(targetFolder+'/'+image)", title="Supprimer")
+        i.fa.fa-minus-circle
+

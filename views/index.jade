@@ -1,0 +1,34 @@
+#targetFolder(ng-controller='SettingsCtrl')
+  
+  form.css-form(name="settingsForm")
+    .form-group
+      label.h4 Répertoire cible
+      .form-inline
+        input.form-control(type='text', ng-model='settings.targetFolder', required)
+        input#folderSelector.form-control(type='file', nwdirectory='nwdirectory', nwworkingdir='', data-file='settings.targetFolder', ng-hide='true')
+        button.btn.btn-default(file-button) 
+          i.fa.fa-folder-open-o
+          | Parcourir
+    .form-group
+      h4 Serveur
+      div.row
+        .col-xs-6
+          label.h5 Votre adresse ip
+          input.form-control(type='text', ng-disabled="true", ng-model='settings.ip')
+          label.h5 Port
+          input.form-control(type='number', ng-model='settings.port', name='port', required, min='1', max='65536')
+            <span ng-show="settingsForm.port.$error.integer">Veuillez saisir un nombre</span>
+            <span ng-show="settingsForm.port.$error.min || settingsForm.port.$error.max">Veuillez saisir un nombre entre 1 et 65 536</span>
+        .col-xs-6.configuration-test-block
+          button.btn.btn-default.btn-xs.configuration-button(ng-click='testServerConfiguration()')
+            i.fa.fa-check
+            | Tester la Configuration
+          small.configuration-message(
+            ng-class="settings.serverConfiguration == true ? 'text-success' : 'text-danger'",
+            ng-bind-html="configurationMessage",
+            ng-cloak
+          )
+
+    button.btn.btn-default(ng-click='save()', ng-disabled='isClean() || settingsForm.$invalid') 
+      i.fa.fa-save
+      | Sauvegarder
