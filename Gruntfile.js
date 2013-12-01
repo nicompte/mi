@@ -5,10 +5,10 @@ module.exports = function (grunt) {
   grunt.initConfig({
     jshint: {
       files: [
-        'Gruntfile.js',
-        'scripts/**/*.js',
-        '!scripts/vendor/**/*.js',
-        '!scripts/*.min.js'
+      'src/Gruntfile.js',
+      'src/scripts/**/*.js',
+      '!src/scripts/vendor/**/*.js',
+      '!src/scripts/*.min.js'
       ],
       options: {
         browser: true,
@@ -28,23 +28,23 @@ module.exports = function (grunt) {
         trailing: true,
         strict: true,
         predef: [
-          'require', 'module',
-          'console', 'alert',
-          'angular',
-          'app'
+        'require', 'module',
+        'console', 'alert',
+        'angular',
+        'app'
         ]
       }
     },
     nodewebkit: {
       options: {
-        build_dir: '/Users/nico/Documents/webkitbuilds',
+        build_dir: '../mi-builds',
         version: '0.8.1',
         mac: true,
         win: true,
         linux32: false,
         linux64: false
       },
-      src: ['./**/*']
+      src: ['src/**/*']
     },
     jade: {
       compile: {
@@ -52,49 +52,60 @@ module.exports = function (grunt) {
           pretty: true
         },
         files: {
-          'views/main.html': 'views/main.jade',
-          'views/index.html': 'views/index.jade',
-          'views/images.html': 'views/images.jade',
-          'views/users.html': 'views/users.jade',
-          'views/users.receive.html': 'views/users.receive.jade',
-          'views/users.send.html': 'views/users.send.jade',
-          'views/newUser.html': 'views/newUser.jade',
-          'views/help.html': 'views/help.jade',
-          'views/upload.html': 'views/upload.jade'
+          'src/views/main.html': 'src/views/main.jade',
+          'src/views/index.html': 'src/views/index.jade',
+          'src/views/images.html': 'src/views/images.jade',
+          'src/views/users.html': 'src/views/users.jade',
+          'src/views/users.receive.html': 'src/views/users.receive.jade',
+          'src/views/users.send.html': 'src/views/users.send.jade',
+          'src/views/newUser.html': 'src/views/newUser.jade',
+          'src/views/help.html': 'src/views/help.jade',
+          'src/views/upload.html': 'src/views/upload.jade'
         }
       }
     },
     less: {
       compile: {
         files: {
-          'css/style.css': 'css/style.less'
+          'src/css/style.css': 'src/css/style.less'
         }
       }
     },
-    watch: {
-      jade: {
-        files: ['views/*.jade'],
-        tasks: ['newer:jade'],
+    compress: {
+      main: {
+        options: {
+          archive: '../mi-builds/releases/mi/win/mi-windows.zip'
+        },
+        files: [
+          {cwd: '../mi-builds/releases/mi/win/mi/', src: ['**/*'], expand: true, flatten: true},
+          ]
+        }
       },
-      less: {
-        files: ['css/*.less'],
-        tasks: ['newer:less']
-      },
-      options: {
-        spawn: false
+      watch: {
+        jade: {
+          files: ['src/views/*.jade'],
+          tasks: ['newer:jade'],
+        },
+        less: {
+          files: ['src/css/*.less'],
+          tasks: ['newer:less']
+        },
+        options: {
+          spawn: false
+        }
       }
-    }
-  });
+    });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-node-webkit-builder');
-  grunt.loadNpmTasks('grunt-contrib-jade');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-newer');
+grunt.loadNpmTasks('grunt-contrib-jshint');
+grunt.loadNpmTasks('grunt-node-webkit-builder');
+grunt.loadNpmTasks('grunt-contrib-jade');
+grunt.loadNpmTasks('grunt-contrib-watch');
+grunt.loadNpmTasks('grunt-contrib-less');
+grunt.loadNpmTasks('grunt-newer');
+grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('hint', ['jshint']);
-  grunt.registerTask('default', ['jade', 'less']);
-  grunt.registerTask('build', ['jade', 'less', 'nodewebkit']);
+grunt.registerTask('hint', ['jshint']);
+grunt.registerTask('default', ['jade', 'less']);
+grunt.registerTask('build', ['jade', 'less', 'nodewebkit', 'compress']);
 
 };
