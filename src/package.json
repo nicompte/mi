@@ -3,7 +3,7 @@
   "main": "views/main.html",
   "version": "0.1.0",
   "window": {
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "show_in_taskbar": false,
     "width": 900

@@ -1,0 +1,19 @@
+div(ng-controller='NewUserSendCtrl')
+  h4 Nouvel utilisateur
+  form.form-inline(name='newUser')
+    div.form-group
+      label.sr-only Nom
+      input.form-control(type="text", ng-model="user.name", required, placeholder='Nom', ng-focus)
+      span(ng-show="newUser.name.$error.required")
+
+    div.form-group
+      label.sr-only Adresse
+      input.form-control(type="text", ng-model="user.address", required, placeholder='Adresse')
+      span(ng-show="newUser.address.$error.required")
+
+     div.form-group
+        label.sr-only Votre nom d'utilisateur
+        input.form-control(type="text", ng-model="user.username", required, placeholder="Votre nom d'utilisateur")
+        span(ng-show="newUser.username.$error.required")
+
+    button.btn.btn-default(ng-click='save()', ng-disabled='isClean() || newUser.$invalid') Sauver

@@ -1,10 +1,10 @@
 // Server side
 var http = require('http'),
-  express = require('express'),
-  server = express(),
-  fs = require('fs'),
-  MD5 = require('MD5'),
-  settings = {};
+express = require('express'),
+server = express(),
+fs = require('fs'),
+MD5 = require('MD5'),
+settings = {};
 
 function onPart(part) {
   'use strict';
@@ -18,32 +18,20 @@ server.use(express.limit('8mb'));
 
 // Client side
 angular.module('LocalStorageModule').value('prefix', 'mi');
-var app = angular.module('mi', ['ngRoute', 'LocalStorageModule', 'ui.router']);
-
-/*
-app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
-  'use strict';
-  $locationProvider.html5Mode(false);
-  $routeProvider
-  .when('/settings', {templateUrl: 'index.html'})
-  .when('/images', {templateUrl: 'images.html'})
-  .when('/users', {templateUrl: 'users.html'})
-  .when('/newUser', {templateUrl: 'newUser.html'})
-  .when('/help',  {templateUrl: 'help.html'})
-  .otherwise({redirectTo: '/images'});
-}]);
-*/
+var app = angular.module('mi', ['ngRoute', 'LocalStorageModule', 'ui.router', 'ui.select']);
 
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/images');
   $stateProvider
-    .state('images', { url: '/images', templateUrl: 'images.html' })
-    .state('upload', { url: '/upload', templateUrl: 'upload.html' })
-    .state('settings', { url: '/settings', templateUrl: 'index.html' })
-    .state('users', { url: '/users', templateUrl: 'users.html'})
-    .state('users.receive', { url: '/receive', templateUrl: 'users.receive.html' })
-    .state('users.send', { url: '/send', templateUrl: 'users.send.html' })
-    .state('help', { url: '/help', templateUrl: 'help.html' });
+  .state('images', { url: '/images', templateUrl: 'images.html' })
+  .state('upload', { url: '/upload', templateUrl: 'upload.html' })
+  .state('settings', { url: '/settings', templateUrl: 'index.html' })
+  .state('users', { url: '/users', templateUrl: 'users.html'})
+  .state('users.receive', { url: '/receive', views: { 'test': { templateUrl: 'users.receive.html' }}})
+  .state('users.send', { url: '/send', views: { 'test': { templateUrl: 'users.send.html' }}})
+  .state('new-user', {url: '/users-new', templateUrl: 'newUser.html'})
+  .state('new-user-send', {url: '/users-send-new', templateUrl: 'newUserSend.html'})
+  .state('help', { url: '/help', templateUrl: 'help.html' });
 });
 
 /*
@@ -52,9 +40,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     }
     */
 
-app.controller('MainCtrl', function ($scope, localStorageService, $location, $route) {
-  'use strict';
-  $scope.$on('$viewContentLoaded', function () {
+    app.controller('MainCtrl', function ($scope, localStorageService, $state) {
+      'use strict';
+      $scope.$on('$viewContentLoaded', function () {
     //console.log('View Changed');
   });
 
@@ -82,8 +70,9 @@ app.controller('MainCtrl', function ($scope, localStorageService, $location, $ro
         if (err){
           throw err;
         }
-        if($location.path() === '/images'){
-          $route.reload();
+        if($state === '/images'){
+          //$route.reload();
+          $state.transitionTo('images')
         }
         res.send(200);
       });
@@ -100,7 +89,7 @@ app.controller('ServerStateCtrl', function ($scope, localStorageService) {
   'use strict';
 
   var nodeServer = http.createServer(server),
-    serverOn = localStorageService.get('serverOn') || false;
+  serverOn = localStorageService.get('serverOn') || false;
   settings = localStorageService.get('settings');
 
   nodeServer.on('listening', function () {
@@ -176,8 +165,8 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
         $scope.settings.serverConfiguration = false;
       }
       $scope.configurationMessage = $scope.settings.serverConfiguration === true ? 'Configuration valide.<br/>Adresse à transmettre : ' + $scope.settings.ip + ':' + $scope.settings.port
-        : $scope.settings.serverConfiguration === false ? 'Echec de la configuration.<br/>Vérifiez que le port est bien ouvert par votre firewall et/ou votre routeur.'
-        : '';
+      : $scope.settings.serverConfiguration === false ? 'Echec de la configuration.<br/>Vérifiez que le port est bien ouvert par votre firewall et/ou votre routeur.'
+      : '';
       $scope.configurationMessage = $sce.trustAsHtml($scope.configurationMessage);
       $scope.$apply();
     });
@@ -185,9 +174,46 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
 
 });
 
-app.controller('SendCtrl', function ($scope) {
+app.controller('SendCtrl', function ($scope, localStorageService) {
 
   var request = require('request');
+
+  $scope.users = localStorageService.get('usersSend');
+
+
+  $scope.data = {};
+  $scope.data.items = [
+  {
+    "id": 1,
+    "name": "Wladimir Coka",
+    "email": "wcoka@email.com",
+  },
+  {
+    "id": 2,
+    "name": "Samantha Smith",
+    "email": "sam@email.com",
+  },
+  {
+    "id": 3,
+    "name": "Estefanía Smith",
+    "email": "esmith@email.com",
+  },
+  {
+    "id": 4,
+    "name": "Natasha Jones",
+    "email": "ncoka@email.com",
+  },
+  {
+    "id": 5,
+    "name": "Nicole Smith",
+    "email": "nicky@email.com",
+  },
+  {
+    "id": 6,
+    "name": "Adrian Jones",
+    "email": "asmith@email.com",
+  },
+  ];
 
   $scope.send = function () {
 
@@ -219,9 +245,9 @@ app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
   };
   $scope.open = function (imageToOpen) {
     var gui = require('nw.gui'),
-      sizeOf = require('image-size'),
-      dimensions = sizeOf(imageToOpen),
-      ratio;
+    sizeOf = require('image-size'),
+    dimensions = sizeOf(imageToOpen),
+    ratio;
     if(dimensions.width > 1024){
       ratio = dimensions.width / dimensions.height;
       dimensions.width = 1024;
@@ -245,7 +271,6 @@ app.controller('ShowUsersCtrl', function ($scope, localStorageService) {
 
   $scope.users = localStorageService.get('users') || [];
   $scope.delete = function (name) {
-    console.log(name);
     $scope.users = $scope.users.filter(function (user) {
       return user.name !== name;
     });
@@ -253,7 +278,7 @@ app.controller('ShowUsersCtrl', function ($scope, localStorageService) {
   };
 });
 
-app.controller('NewUserCtrl', function ($scope, localStorageService, $location) {
+app.controller('NewUserCtrl', function ($scope, localStorageService, $state) {
   'use strict';
 
   $scope.save = function () {
@@ -264,10 +289,42 @@ app.controller('NewUserCtrl', function ($scope, localStorageService, $location) 
       localStorageService.remove('users');
       localStorageService.add('users', users);
     }
-    $location.path('/users');
+    $state.transitionTo('users.receive')
   };
   var userDoesNotExist = function (user) {
     var users = localStorageService.get('users') || [];
+    return users.every(function (value, index, ar) {
+      return value.name !== user.name;
+    });
+  };
+});
+
+app.controller('ShowUsersSendCtrl', function ($scope, localStorageService) {
+  'use strict';
+
+  $scope.users = localStorageService.get('usersSend') || [];
+  $scope.delete = function (name) {
+    $scope.users = $scope.users.filter(function (user) {
+      return user.name !== name;
+    });
+    localStorageService.set('usersSend', $scope.users);
+  };
+});
+
+app.controller('NewUserSendCtrl', function ($scope, localStorageService, $state) {
+  'use strict';
+
+  $scope.save = function () {
+    var users = localStorageService.get('usersSend') || [];
+    if(userDoesNotExist($scope.user)){
+      users.push($scope.user);
+      localStorageService.remove('usersSend');
+      localStorageService.add('usersSend', users);
+    }
+    $state.transitionTo('users.send');
+  };
+  var userDoesNotExist = function (user) {
+    var users = localStorageService.get('usersSend') || [];
     return users.every(function (value, index, ar) {
       return value.name !== user.name;
     });

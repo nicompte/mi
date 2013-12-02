@@ -44,7 +44,7 @@ module.exports = function (grunt) {
         linux32: false,
         linux64: false
       },
-      src: ['src/**/*']
+      src: ['./src/**/*']
     },
     jade: {
       compile: {
@@ -59,6 +59,7 @@ module.exports = function (grunt) {
           'src/views/users.receive.html': 'src/views/users.receive.jade',
           'src/views/users.send.html': 'src/views/users.send.jade',
           'src/views/newUser.html': 'src/views/newUser.jade',
+          'src/views/newUserSend.html': 'src/views/newUserSend.jade',
           'src/views/help.html': 'src/views/help.jade',
           'src/views/upload.html': 'src/views/upload.jade'
         }

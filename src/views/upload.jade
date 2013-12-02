@@ -2,6 +2,15 @@ h4 Envoi d'image
 
 div(ng-controller='SendCtrl')
   form(name='sendForm')
+
+    .form-group
+      label.h5 Utilisateur
+      ui-select.select2(ng-model="users.custom")
+        match(placeholder="Utilisateur") {{$select.selected.name}}
+        choices(data="item in users | filter : $select.search")
+          div(ng-bind-html="trustAsHtml((item.name | highlight:$select.search))")
+          div {{item.address}}
+
     .form-group
       label.h5 Adresse
       input.form-control(type="text", ng-model="send.address", required, placeholder='Adresse', ng-focus)

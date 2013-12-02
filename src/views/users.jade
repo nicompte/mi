@@ -1,29 +1,11 @@
 .row
-  ul.nav.nav-pills.nav-xs.col-xs-6.col-xs-offset-4.user-type-selection-nav
-    li.active
+  ul.nav.nav-pills.nav-xs.col-xs-6.col-xs-offset-4.user-type-selection-nav(bs-navbar)
+    li(data-match-route='/users/receive')
       a(ui-sref="users.receive")
         i.fa.fa-mail-forward
         | Qui vous envoient
-    li
+    li(data-match-route='/users/send')
       a(ui-sref="users.send")
         i.fa.fa-mail-reply
         | À qui vous envoyez
-div(ui-view)
-
-div(ng-controller='ShowUsersCtrl')
-  table.table
-    thead
-      tr
-        th Utilisateur
-        th Nombre d'images
-        th
-          a(href='#/newUser', title="Ajouter")
-            i.fa.fa-plus-circle.text-success
-            | Ajouter
-      tbody
-        tr(ng-repeat='user in users')
-          td {{user.name}}
-          td {{user.numberOfImages}}
-          td
-            a(href='javascript:void(0)', ng-click='delete(user.name)', title="Supprimer")
-              i.fa.fa-minus-circle.text-danger
+div(ui-view="test")

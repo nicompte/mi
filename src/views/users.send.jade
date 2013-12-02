@@ -1,1 +1,19 @@
-p usersS
+div(ng-controller='ShowUsersSendCtrl')
+  table.table
+    thead
+      tr
+        th Utilisateur
+        th Adresse
+        th Votre nom d'utilisateur
+        th
+          a(ui-sref='new-user-send', title="Ajouter")
+            i.fa.fa-plus-circle.text-success
+            | Ajouter
+      tbody
+        tr(ng-repeat='user in users')
+          td {{user.name}}
+          td {{user.address}}
+          td {{user.username}}
+          td
+            a(href='javascript:void(0)', ng-click='delete(user.name)', title="Supprimer")
+              i.fa.fa-minus-circle.text-danger

@@ -43,7 +43,7 @@ app.directive('bsNavbar', function($location) {
           var $li = angular.element(li),
 
             pattern = $li.attr('data-match-route'),
-            regexp = new RegExp('^' + pattern + '$', ['i']);
+            regexp = new RegExp('^' + pattern + '', ['i']);
 
           if(regexp.test(newValue)) {
             $li.addClass('active');
