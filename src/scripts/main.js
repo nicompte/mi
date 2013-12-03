@@ -178,11 +178,13 @@ app.controller('SendCtrl', function ($scope, localStorageService) {
 
   var request = require('request');
 
-  $scope.users = localStorageService.get('usersSend');
-  $scope.user = {};
+  $scope.users = {};
+  $scope.users.items = localStorageService.get('usersSend');
 
   $scope.updateUser = function () {
-    alert($scope.user.selected.name)
+    $scope.send.address = $scope.users.selected.address;
+    $scope.send.user = {};
+    $scope.send.user.name = $scope.users.selected.username;
   };
 
   $scope.send = function () {
