@@ -111,13 +111,13 @@ module.exports = function (grunt) {
       build: {
         upload: [
           { src: '../mi-builds/releases/mi/win/mi-windows.zip', dest: 'mi-windows.zip' },
-          { src: '../mi-builds/releases/mi/mac/mi.app', dest: 'mi.app' }
+          { src: '../mi-builds/releases/mi/mac/mi.app/**', dest: 'mi.app' }
         ]
       }
     },
     'string-replace': {
-      dist: {
-        files: { 'src/pakcage.json': 'src/package.json' },
+      build: {
+        files: { 'src/package.json': 'src/package.json' },
         options: {
           replacements: [{
             pattern: '"toolbar": true',
@@ -140,6 +140,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('hint', ['jshint']);
   grunt.registerTask('default', ['jade', 'less']);
-  grunt.registerTask('build', ['jade', 'less', 'nodewebkit', 'compress']);
+  grunt.registerTask('build', ['jade', 'less', 'string-replace', 'nodewebkit', 'compress']);
+  grunt.registerTask('release', ['build', 's3']);
 
 };
