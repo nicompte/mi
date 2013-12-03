@@ -10,5 +10,9 @@
     "grunt-newer": "~0.6.0",
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-compress": "~0.5.3"
+  },
+  "devDependencies": {
+    "grunt-s3": "~0.2.0-alpha.3",
+    "grunt-string-replace": "~0.2.7"
   }
 }

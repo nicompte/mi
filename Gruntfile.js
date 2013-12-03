@@ -2,13 +2,16 @@ module.exports = function (grunt) {
 
   'use strict';
 
+
+
   grunt.initConfig({
+    aws: grunt.file.readJSON('/Users/nico/grunt-aws.json'),
     jshint: {
       files: [
-      'src/Gruntfile.js',
-      'src/scripts/**/*.js',
-      '!src/scripts/vendor/**/*.js',
-      '!src/scripts/*.min.js'
+        'Gruntfile.js',
+        'src/scripts/**/*.js',
+        '!src/scripts/vendor/**/*.js',
+        '!src/scripts/*.min.js'
       ],
       options: {
         browser: true,
@@ -28,10 +31,10 @@ module.exports = function (grunt) {
         trailing: true,
         strict: true,
         predef: [
-        'require', 'module',
-        'console', 'alert',
-        'angular',
-        'app'
+          'require', 'module',
+          'console', 'alert',
+          'angular',
+          'app'
         ]
       }
     },
@@ -44,7 +47,7 @@ module.exports = function (grunt) {
         linux32: false,
         linux64: false
       },
-      src: ['./src']
+      src: ['./src/**/*']
     },
     jade: {
       compile: {
@@ -79,34 +82,64 @@ module.exports = function (grunt) {
         },
         files: [
           {cwd: '../mi-builds/releases/mi/win/mi/', src: ['**/*'], expand: true, flatten: true},
-          ]
-        }
+        ]
+      }
+    },
+    watch: {
+      jade: {
+        files: ['src/views/*.jade'],
+        tasks: ['newer:jade'],
       },
-      watch: {
-        jade: {
-          files: ['src/views/*.jade'],
-          tasks: ['newer:jade'],
-        },
-        less: {
-          files: ['src/css/*.less'],
-          tasks: ['newer:less']
-        },
+      less: {
+        files: ['src/css/*.less'],
+        tasks: ['newer:less']
+      },
+      options: {
+        spawn: false
+      }
+    },
+    s3: {
+      options: {
+        key: '<%= aws.key %>',
+        secret: '<%= aws.secret %>',
+        bucket: 'mi-app-bucket',
+        region: 'eu-west-1',
+        access: 'public-read',
+        debug: false,
+        gzip: true
+      },
+      build: {
+        upload: [
+          { src: '../mi-builds/releases/mi/win/mi-windows.zip', dest: 'mi-windows.zip' },
+          { src: '../mi-builds/releases/mi/mac/mi.app', dest: 'mi.app' }
+        ]
+      }
+    },
+    'string-replace': {
+      dist: {
+        files: { 'src/pakcage.json': 'src/package.json' },
         options: {
-          spawn: false
+          replacements: [{
+            pattern: '"toolbar": true',
+            replacement: '"toolbar": false'
+          }]
         }
       }
-    });
+    }
+  });
 
-grunt.loadNpmTasks('grunt-contrib-jshint');
-grunt.loadNpmTasks('grunt-node-webkit-builder');
-grunt.loadNpmTasks('grunt-contrib-jade');
-grunt.loadNpmTasks('grunt-contrib-watch');
-grunt.loadNpmTasks('grunt-contrib-less');
-grunt.loadNpmTasks('grunt-newer');
-grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-node-webkit-builder');
+  grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-newer');
+  grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-s3');
+  grunt.loadNpmTasks('grunt-string-replace');
 
-grunt.registerTask('hint', ['jshint']);
-grunt.registerTask('default', ['jade', 'less']);
-grunt.registerTask('build', ['jade', 'less', 'nodewebkit', 'compress']);
+  grunt.registerTask('hint', ['jshint']);
+  grunt.registerTask('default', ['jade', 'less']);
+  grunt.registerTask('build', ['jade', 'less', 'nodewebkit', 'compress']);
 
 };

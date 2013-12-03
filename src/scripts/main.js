@@ -188,13 +188,11 @@ app.controller('SendCtrl', function ($scope, localStorageService) {
   };
 
   $scope.send = function () {
-
     var r = request.post('http://' + $scope.send.address + '/file-upload');
     var form = r.form();
     form.append('name', $scope.send.user.name);
     form.append('password', $scope.send.user.password);
     form.append('file', fs.createReadStream($scope.send.image));
-
   };
 
 });
