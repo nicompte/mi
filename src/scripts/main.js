@@ -34,17 +34,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   .state('help', { url: '/help', templateUrl: 'help.html' });
 });
 
-/*
-, controller: function ($state) {
-      $state.transitionTo('users.receive');
-    }
-    */
-
-    app.controller('MainCtrl', function ($scope, localStorageService, $state) {
+  app.controller('MainCtrl', function ($scope, localStorageService, $state) {
       'use strict';
-      $scope.$on('$viewContentLoaded', function () {
-    //console.log('View Changed');
-  });
 
   //Define routes
   server.post('/file-upload', function(req, res) {
@@ -70,9 +61,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         if (err){
           throw err;
         }
-        if($state === '/images'){
-          //$route.reload();
-          $state.transitionTo('images')
+        if($state.is('images')){
+          $state.go('.');
         }
         res.send(200);
       });
@@ -230,8 +220,9 @@ app.controller('ShowImagesCtrl', function ($scope, localStorageService) {
     }
     gui.Window.open('file://' + imageToOpen, {
       position: 'center',
-      width: dimensions.width,
-      height: dimensions.height
+      width: Math.round(dimensions.width),
+      height: Math.round(dimensions.height),
+      toolbar: false
     });
   };
 });
@@ -259,7 +250,7 @@ app.controller('NewUserCtrl', function ($scope, localStorageService, $state) {
       localStorageService.remove('users');
       localStorageService.add('users', users);
     }
-    $state.transitionTo('users.receive')
+    $state.go('users.receive')
   };
   var userDoesNotExist = function (user) {
     var users = localStorageService.get('users') || [];
@@ -291,7 +282,7 @@ app.controller('NewUserSendCtrl', function ($scope, localStorageService, $state)
       localStorageService.remove('usersSend');
       localStorageService.add('usersSend', users);
     }
-    $state.transitionTo('users.send');
+    $state.go('users.send');
   };
   var userDoesNotExist = function (user) {
     var users = localStorageService.get('usersSend') || [];
