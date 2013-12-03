@@ -44,7 +44,7 @@ module.exports = function (grunt) {
         linux32: false,
         linux64: false
       },
-      src: ['./src/**/*']
+      src: ['./src']
     },
     jade: {
       compile: {

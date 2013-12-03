@@ -5,9 +5,9 @@ div(ng-controller='SendCtrl')
 
     .form-group
       label.h5 Utilisateur
-      ui-select.select2(ng-model="user", ng-change='updateUser()')
+      ui-select.select2(ng-model="users.selected", ng-change='updateUser()')
         match(placeholder="Utilisateur") {{$select.selected.name}}
-        choices(data="item in users | filter : $select.search")
+        choices(data="item in users.items | filter : $select.search")
           div(ng-bind-html="trustAsHtml((item.name | highlight:$select.search))")
           div {{item.address}}
 

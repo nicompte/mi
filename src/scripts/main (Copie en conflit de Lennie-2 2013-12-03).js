@@ -23,28 +23,20 @@ var app = angular.module('mi', ['ngRoute', 'LocalStorageModule', 'ui.router', 'u
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/images');
   $stateProvider
-  .state('images', { url: '/images', templateUrl: 'images.html' })
-  .state('upload', { url: '/upload', templateUrl: 'upload.html' })
-  .state('settings', { url: '/settings', templateUrl: 'index.html' })
-  .state('users', { url: '/users', templateUrl: 'users.html'})
-  .state('users.receive', { url: '/receive', views: { 'test': { templateUrl: 'users.receive.html' }}})
-  .state('users.send', { url: '/send', views: { 'test': { templateUrl: 'users.send.html' }}})
-  .state('new-user', {url: '/users-new', templateUrl: 'newUser.html'})
-  .state('new-user-send', {url: '/users-send-new', templateUrl: 'newUserSend.html'})
-  .state('help', { url: '/help', templateUrl: 'help.html' });
+    .state('images', { url: '/images', templateUrl: 'images.html' })
+    .state('upload', { url: '/upload', templateUrl: 'upload.html' })
+    .state('settings', { url: '/settings', templateUrl: 'index.html' })
+    .state('users', { url: '/users', templateUrl: 'users.html'})
+    .state('users.receive', { url: '/receive', views: { 'test': { templateUrl: 'users.receive.html' }}})
+    .state('users.send', { url: '/send', views: { 'test': { templateUrl: 'users.send.html' }}})
+    .state('new-user', {url: '/users-new', templateUrl: 'newUser.html'})
+    .state('new-user-send', {url: '/users-send-new', templateUrl: 'newUserSend.html'})
+    .state('help', { url: '/help', templateUrl: 'help.html' });
 });
 
-/*
-, controller: function ($state) {
-      $state.transitionTo('users.receive');
-    }
-    */
 
-    app.controller('MainCtrl', function ($scope, localStorageService, $state) {
-      'use strict';
-      $scope.$on('$viewContentLoaded', function () {
-    //console.log('View Changed');
-  });
+app.controller('MainCtrl', function ($scope, localStorageService, $state) {
+  'use strict';
 
   //Define routes
   server.post('/file-upload', function(req, res) {
@@ -175,14 +167,18 @@ app.controller('SettingsCtrl', function ($scope, localStorageService, $sce) {
 });
 
 app.controller('SendCtrl', function ($scope, localStorageService) {
+  'use strict';
 
   var request = require('request');
 
-  $scope.users = localStorageService.get('usersSend');
-  $scope.user = {};
+
+  $scope.users = {};
+  $scope.users.items = localStorageService.get('usersSend');
 
   $scope.updateUser = function () {
-    alert($scope.user.selected.name)
+    $scope.send.address = $scope.users.selected.address;
+    $scope.send.user = {};
+    $scope.send.user.name = $scope.users.selected.username;
   };
 
   $scope.send = function () {
