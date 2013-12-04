@@ -3,7 +3,7 @@
   "main": "views/main.html",
   "version": "0.1.0",
   "window": {
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "icon": "css/mi.png",
     "show_in_taskbar": false,
