@@ -13,8 +13,13 @@ div(ng-controller='SendCtrl')
 
     .form-group
       label.h5 Adresse
-      input.form-control(type="text", ng-model="send.address", required, placeholder='Adresse', ng-focus)
+      .form-inline
+        input.form-control(type="text", ng-model="send.address", required, placeholder='Adresse', ng-blur="updateStatus()")
+        span.address-status.label.label-danger(ng-show='addressStatus != null', ng-class='addressStatus == true ? "label-success" : "label-danger"', ng-cloak)
+          {{ addressStatus == true ? "On" : "Off" }}
+
       span(ng-show="sendForm.send.address.$error.required")
+
 
     label.h5 Image
     .form-group
@@ -34,4 +39,6 @@ div(ng-controller='SendCtrl')
         input.form-control(type="password", ng-model="send.user.password", required, placeholder='Votre mot de passe', style="width: 198px;")
         span(ng-show="sendForm.send.user.password.$error.required")
 
-    button.btn.btn-default(ng-click='send()', ng-disabled='isClean() || sendForm.$invalid') Envoyer
+    button.btn.btn-default(ng-click='send()', ng-disabled='isClean() || sendForm.$invalid || sending == true')
+      i.fa.fa-spinner.fa-spin(ng-show="sending == true", ng-cloak)
+      | {{ sending ? 'Envoi en cours' : 'Envoyer' }}

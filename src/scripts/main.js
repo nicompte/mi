@@ -13,6 +13,7 @@ function onPart(part) {
   }
 }
 
+server.use(express.compress());
 server.use(express.bodyParser({onPart: onPart}));
 server.use(express.limit('8mb'));
 
@@ -40,19 +41,37 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   //Define routes
   server.post('/file-upload', function(req, res) {
 
-    var settings = localStorageService.get('settings');
-    var users = localStorageService.get('users');
+    var settings = localStorageService.get('settings'),
+      users = localStorageService.get('users'),
+      authorizedUser, wrongFileType,
+      tmpPath, targetPath;
 
-    var authorizedUser = users.filter(function (user) {
+    authorizedUser = users.filter(function (user) {
       return user.name === req.body['user.name'] && user.password === MD5(req.body['user.password']);
     });
 
     if(authorizedUser.length !== 1){
       res.send(401);
+      fs.unlink(req.files.file.path);
+      return;
     }
 
-    var tmpPath = req.files.file.path;
-    var targetPath = settings.targetFolder + '/' + req.files.file.name;
+    var filtered = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'].filter( function (extension) {
+      return req.files.file.type === extension;
+    });
+
+    if(!filtered.length){
+      wrongFileType = true;
+    }
+
+    if(wrongFileType){
+      res.send(400);
+      fs.unlink(req.files.file.path);
+      return;
+    }
+
+    tmpPath = req.files.file.path;
+    targetPath = settings.targetFolder + '/' + req.files.file.name;
     fs.rename(tmpPath, targetPath, function(err) {
       if (err){
         throw err;
@@ -173,15 +192,42 @@ app.controller('SendCtrl', function ($scope, localStorageService) {
 
   $scope.updateUser = function () {
     $scope.send.address = $scope.users.selected.address;
+    $scope.updateStatus();
     $scope.send.user = {};
     $scope.send.user.name = $scope.users.selected.username;
   };
 
+  $scope.updateStatus = function () {
+    if(!$scope.send.address || $scope.send.address === ''){
+      $scope.addressStatus = null;
+    }else{
+      var url = 'http://' + $scope.send.address + '/ping';
+      request({url: url, timeout: 2000}, function (error, response, body) {
+        if(!error && response.statusCode === 200){
+          $scope.addressStatus = true;
+        }else{
+          $scope.addressStatus = false;
+        }
+        $scope.$apply();
+      });
+    }
+  }
+
+
   $scope.send = function () {
-    var r = request.post('http://' + $scope.send.address + '/file-upload');
+    $scope.sending = true;
+    var r = request.post('http://' + $scope.send.address + '/file-upload', function (error, response, body){
+      if(!error && response.statusCode === 200){
+        $scope.send.image = '';
+      }else{
+        alert('Erreur lors de l\'envoi, veuillez vérifier votre envoi.');
+      }
+      $scope.sending = false;
+      $scope.$apply();
+    });
     var form = r.form();
-    form.append('name', $scope.send.user.name);
-    form.append('password', $scope.send.user.password);
+    form.append('user.name', $scope.send.user.name);
+    form.append('user.password', $scope.send.user.password);
     form.append('file', fs.createReadStream($scope.send.image));
   };
 
