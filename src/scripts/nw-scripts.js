@@ -28,16 +28,26 @@ menu.append(new gui.MenuItem({
   }
 }));
 
-win.on('close', function () {
-  'use strict';
 
-  this.hide();
+var initializeTray = function () {
 
-  tray = new gui.Tray({ title: 'Mi', menu: menu});
+  tray = new gui.Tray({ icon: 'css/mi.png', menu: menu});
 
   tray.on('click', function() {
     win.show();
     this.remove();
     tray = null;
   });
+
+};
+
+win.on('close', function () {
+  'use strict';
+
+  this.hide();
+
+  initializeTray();
+
 });
+
+initializeTray();
